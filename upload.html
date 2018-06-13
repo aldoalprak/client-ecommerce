@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bookworm Store</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>	
+	<link rel="stylesheet" type="text/css" href="./css/index.css">
+
+</head>
+<body>
+	<div id="app" col-md-3 col-sm-4>
+		<nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">Bookworm Store</a>
+				<form id="search-bar" class="navbar-form navbar-left" action="" >
+			    	<div class="input-group">
+			        	<input type="text" class="form-control" placeholder="Search" name="search">
+			        	<div class="input-group-btn">
+			          		<button class="btn btn-default" type="submit" value="cari">
+			          			<i class="glyphicon glyphicon-search"></i>
+			          		</button>
+			        	</div>
+		      		</div>
+	    		</form>
+	    		<button class="btn btn-danger navbar-btn">Advance</button>
+			
+	    		<button type="button" class="btn btn-info btn-lg" id="cart" data-toggle="modal" data-target="#cartModal" v-on:click="getCart"><span class="glyphicon glyphicon-shopping-cart"></span></button>
+	       			
+	        		<div class="modal fade" id="cartModal" role="dialog">
+	        			<div class="modal-dialog">
+	        				<div class="modal-content">
+	        					<div class="modal-header">
+						          <h4 class="modal-title">Products</h4>
+						        </div>
+						        <div class="modal-body" >	
+						          <!-- <p>There are no products in your shopping cart</p> -->
+						        	<ul class="header-cart-wrapitem" v-for="item in items">
+										<li class="header-cart-item">
+											<div class="header-cart-item-img">
+												<img v-bind:src="item.image" alt="IMG">
+											</div>
+
+											<div class="header-cart-item-txt">
+												<span class="header-cart-item-name">
+													{{item.title}}
+												</span>
+
+												<span class="header-cart-item-info">
+													{{item.quantity}} x {{item.price}}
+												</span>
+												 <button v-on:click="removeToCart(item)"><i class="glyphicon glyphicon-trash"></i></button>
+											</div>
+										</li>
+									</ul>
+								</div>		
+						        <div class="modal-footer">
+								  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								  <a href="checkout.html"><button type="button" class="btn btn-default" data-dismiss="modal">Buy Now</button></a>
+						        </div>
+	        				</div>
+	        			</div>
+	        		</div>
+			</div>
+		</nav>
+
+		
+
+	</div>
+	
+		
+</body>
+</html>
+
+
+<script>
+
+	var app = new Vue({
+		el:'#app',
+		data: {
+			items:[],
+			total:"",
+			seen:true	
+		}
+	})
+
+</script>	

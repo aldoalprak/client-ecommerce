@@ -1,0 +1,57 @@
+
+#cart {
+	float: right;
+	size:20px;
+}
+
+#addToCart {
+	size:20px;
+}
+
+.contain {
+  margin:70px 100px;
+}
+
+.container {
+  padding-right: 150px;
+    padding-left: 70px;
+    margin-right: auto;
+    margin-left: auto;
+
+}
+
+.flex-container {
+  display: flex;
+  margin:30px;
+  flex-wrap:wrap;
+  justify-content: space-around;
+}
+
+
+.flex-container > div {
+  width: 200px;
+  margin: 10px;
+  text-align: center;
+  line-height: 75px;
+  font-size: 30px;
+}
+
+/*.parent {
+  display: flex;
+  font-size: 0;
+  flex-wrap: wrap;
+  text-align: center;
+}
+*/
+/*.child {
+  display: inline-block;
+  width: calc(100% * 3);
+}*/
+
+
+
+.card-text{
+	font-size: 15px
+}
+
+

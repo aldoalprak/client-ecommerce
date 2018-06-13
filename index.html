@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bookworm Store</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>	
+	<link rel="stylesheet" type="text/css" href="./css/index.css">
+	<script src="./components/searchBar.js"></script>
+</head>
+<body>
+	<div id="app" col-md-3 col-sm-4>
+		<!-- <search-bar-component></search-bar-component> -->
+		<nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">Bookworm Store</a>
+				<form id="search-bar" class="navbar-form navbar-left" action="" >
+			    	<div class="input-group">
+			        	<input type="text" class="form-control" placeholder="Search" name="search">
+			        	<div class="input-group-btn">
+			          		<button class="btn btn-default" type="submit" value="cari">
+			          			<i class="glyphicon glyphicon-search"></i>
+			          		</button>
+			        	</div>
+		      		</div>
+	    		</form>
+	    		<button class="btn btn-danger navbar-btn">Advance</button>
+			
+	    		<button type="button" class="btn btn-info btn-lg" id="cart" data-toggle="modal" data-target="#cartModal" v-on:click=getCart()><span class="glyphicon glyphicon-shopping-cart"></span></button>
+	        		<div class="modal fade" id="cartModal" role="dialog">
+	        					
+	        			<div class="modal-dialog modal-lg">
+	        				<div class="panel panel-info">
+		        				<div class="modal-content">
+		        					<div class="modal-header">
+							          	<div class="panel-heading">
+											<div class="panel-title">
+												<div class="row">
+													<div class="col-xs-6">
+														<h5><span class="glyphicon glyphicon-shopping-cart"></span> Shopping Cart</h5>
+													</div>
+													<div class="col-xs-6">
+														<button type="button" class="btn btn-primary btn-sm btn-block">
+															<span class="glyphicon glyphicon-share-alt"></span> Continue shopping
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+							        </div>
+							         <div class="modal-body" >	
+							         
+							         	<div class="panel-body">
+											<div class = "product-list"  v-for="item in items">
+												<div class="row">
+													<div class="col-xs-2"><img class="img-responsive" v-bind:src="item.image" alt="IMG">
+													</div>
+													<div class="col-xs-3">
+														<h4 class="product-name"><strong>{{item.title}}</strong></h4><h4><small>Product description</small></h4>
+													</div>
+													<div class="col-xs-7">
+														<div class="col-xs-5">
+															<h6><strong>Rp. {{item.price.toLocaleString( {style:"currency"})}} </strong></h6>
+														</div>
+														<div class="col-xs-1">
+															<h6><strong>x</strong></h6>
+														</div>
+														<div class="col-xs-1" >
+															<h6><strong>{{item.quantity}}</strong></h6>
+														</div>
+														<div class="col-xs-1">
+															<h6><strong>=</strong></h6>
+														</div>
+														<div class="col-xs-2">
+															<h6><strong>Rp.{{(item.price *item.quantity).toLocaleString( {style:"currency" })}}</strong></h6>
+														</div>
+														<div class="col-xs-2">
+															<button v-on:click="removeToCart(item)"><i class="glyphicon glyphicon-trash"></i>
+															</button>
+														</div>
+													</div>
+												</div>
+												<hr>
+											</div>							
+										</div>
+									</div>		
+							        <div class="modal-footer">
+									  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+									  <a href="checkout.html"><button type="button" class="btn btn-default">Buy Now</button></a>
+							        </div>
+		        				</div>
+	        				</div>
+	        			</div>
+	        		</div>
+			</div>
+		</nav>
+		
+		<div class="contain">
+			<div class="container" >
+			 	<div id="myCarousel" class="carousel slide" data-ride="carousel">
+			    <!-- Indicators -->
+			    <ol class="carousel-indicators">
+			      	<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+			      	<li data-target="#myCarousel" data-slide-to="1"></li>
+			      	<li data-target="#myCarousel" data-slide-to="2"></li>
+			    </ol>
+
+			    <!-- Wrapper for slides -->
+			    <div class="carousel-inner">
+			      <div class="item active">
+			        <img src="https://images-na.ssl-images-amazon.com/images/I/512EFepj8GL._AC_US218_.jpg" alt="Los Angeles" >
+			      </div>
+
+			      <div class="item">
+			        <img src="https://images-na.ssl-images-amazon.com/images/I/512EFepj8GL._AC_US218_.jpg" alt="Los Angeles" alt="Chicago">
+			      </div>
+			    
+			      <div class="item">
+			        <img src="https://images-na.ssl-images-amazon.com/images/I/512EFepj8GL._AC_US218_.jpg" alt="Los Angeles" alt="New york">
+			      </div>
+			    </div>
+
+			    <!-- Left and right controls -->
+			    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+			      <span class="glyphicon glyphicon-chevron-left"></span>
+			      <span class="sr-only">Previous</span>
+			    </a>
+			    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+			      <span class="glyphicon glyphicon-chevron-right"></span>
+			      <span class="sr-only">Next</span>
+			    </a>
+			  </div>
+			</div>
+
+
+			<div class="flex-container" >
+				<div class="card" style="width: 25rem;" v-for="catalog in shops" >
+			  		<a href="#"><img  class="card-img"  v-bind:src="catalog.image" alt="Card image cap"  height="250px" ></a>
+			  		<div class="card-body">
+			    		<h5 class="card-title">{{catalog.title}}</h5>
+			    		<p class="card-text">{{catalog.price}}</p>
+			    		<button class="btn btn-info pull"  v-on:click="addToCart(catalog)">
+			    		<i class="icon-shopping-cart"></i>	
+			    		Add to Cart</button>
+		  			</div>
+				</div>
+			</div>
+		</div>	
+		
+	</div>	
+<script>
+
+	var app = new Vue({
+		el:'#app',
+		data:{
+			shops:[],
+			items:[]
+		},
+		created() {
+			console.log("getttt")
+			this.getItem()
+			this.getCart()
+		},
+		methods: {
+			addToCart(catalog) {
+				// console.log(this.items.length,"length items")
+				var count = 1;
+				if(this.items.length == 0) {
+					console.log("catalog length 0=",catalog.quantity)
+					catalog.quantity++
+					this.items.push(catalog)	
+					
+				}else{
+					console.log("all items ===>",this.items)
+
+					for(var i=0;i<this.items.length;i++) {
+						if(this.items[i].title == catalog.title){
+							console.log("book+1",this.items[i].quantity,"||",catalog.quantity)
+							catalog.quantity= this.items[i].quantity + 1
+							this.items[i].quantity = this.items[i].quantity + 1	
+							count*=0
+						}	
+					}
+
+					if(count == 1){
+						console.log("catalog tidak ada=",catalog.quantity)
+						catalog.quantity++
+						this.items.push(catalog)
+					}	
+				}
+				
+				
+				axios.post('http://localhost:3000/carts/add',catalog)
+				.then(function(response) {
+					console.log(response)
+				})
+				.catch(err=>{
+					console.log(err)
+				})	
+				
+			},
+			getCart() {
+
+				axios.get('http://localhost:3000/carts/show')
+				.then(dataCarts=>{
+					const {data} = dataCarts
+					this.items = data
+					// console.log("items reload",this.items) 
+				})
+				.catch(err=>{
+					console.log(err)
+				})	
+
+			},
+			removeToCart(item) {
+				item.quantity = item.quantity-1
+				if(item.quantity==0){
+					var cartRemove = this.items.filter(function(book) {
+						console.log(book.title,item.title)
+						return book.title !== item.title
+						
+					})
+					this.shops.forEach(catalog=>{
+						if(catalog.title == item.title) {
+							catalog.quantity = 0
+						}
+					})
+					this.items = cartRemove	
+				}						
+				
+
+				axios.post('http://localhost:3000/carts/remove',item)
+				.then(response=>{
+					console.log("=====",response)
+				})
+				.catch(err=>{
+					console.log(err.message)
+				})
+			},
+			getItem() {
+				axios.get('http://localhost:3000/items/show')
+				.then(dataItems=>{
+					this.shops = dataItems.data
+					console.log("=====",this.shops)
+				})
+				.catch(err=>{
+					console.log(err)
+				})
+			}
+		}
+
+	})						
+
+
+</script>
+	
+
+
+</body>
+</html>
