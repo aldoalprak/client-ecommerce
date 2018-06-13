@@ -1,11 +1,8 @@
 Vue.component('search-bar-component', {
 	
-		// created() {
-		// 	this.getCart()
-		// },
-		// data: {
-		// 	items:[]
-		// },
+		created() {
+			this.getCart()
+		},
 		template: 
 	`<nav class="navbar navbar-inverse">
 			<div class="container-fluid">
@@ -92,10 +89,12 @@ Vue.component('search-bar-component', {
 		</nav>`,
 		methods: {
 			getCart() {
+				let self = this
 				axios.get('http://localhost:3000/carts/show')
 				.then(dataCarts=>{
 					const {data} = dataCarts
-					this.items = data 
+					self.items = data
+					// console.log("items reload",self.items) 
 				})
 				.catch(err=>{
 					console.log(err)
@@ -103,18 +102,23 @@ Vue.component('search-bar-component', {
 
 			},
 			removeToCart(item) {
-				// console.log(item)
-				item.quantity -= 1
-				// console.log(item.title)
+				item.quantity = item.quantity-1
 				if(item.quantity==0){
 					var cartRemove = this.items.filter(function(book) {
 						console.log(book.title,item.title)
 						return book.title !== item.title
 						
 					})
-					console.log(cartRemove,"cartRemove")
+
+					console.log(this.shops,this.items,"shopsss")
+					this.shops.forEach(catalog=>{
+						if(catalog.title == item.title) {
+							catalog.quantity = 0
+						}
+					})
 					this.items = cartRemove	
-				}
+				}						
+				
 
 				axios.post('http://localhost:3000/carts/remove',item)
 				.then(response=>{
@@ -125,7 +129,7 @@ Vue.component('search-bar-component', {
 				})
 			}
 		},
-		props:['items']
+		props:['shops','items']
 })
 
 console.log("search componernt")
