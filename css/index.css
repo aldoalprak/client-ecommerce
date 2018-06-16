@@ -36,22 +36,13 @@
   font-size: 30px;
 }
 
-/*.parent {
-  display: flex;
-  font-size: 0;
-  flex-wrap: wrap;
-  text-align: center;
-}
-*/
-/*.child {
-  display: inline-block;
-  width: calc(100% * 3);
-}*/
-
-
-
 .card-text{
 	font-size: 15px
 }
 
 
+.form-group {
+  background-color: red
+  margin-left: 20;
+  margin-right:20;
+}

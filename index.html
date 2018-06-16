@@ -10,17 +10,17 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>	
 	<link rel="stylesheet" type="text/css" href="./css/index.css">
-	<script src="./components/searchBar.js"></script>
+	<!-- <script src="./components/searchBar.js"></script> -->
 </head>
 <body>
 	<div id="app" col-md-3 col-sm-4>
-		<search-bar-component></search-bar-component>
-	<!-- 	<nav class="navbar navbar-inverse">
+		<!-- <search-bar-component></search-bar-component> -->
+		<nav class="navbar navbar-inverse">
 			<div class="container-fluid">
-				<a class="navbar-brand" href="#">Bookworm Store</a>
+				<a class="navbar-brand" href="index.html">Bookworm Store</a>
 				<form id="search-bar" class="navbar-form navbar-left" action="" >
 			    	<div class="input-group">
-			        	<input type="text" class="form-control" placeholder="Search" name="search">
+			        	<input type="text" class="form-control" placeholder="Search" name="search" v-model="searchInput">
 			        	<div class="input-group-btn">
 			          		<button class="btn btn-default" type="submit" value="cari">
 			          			<i class="glyphicon glyphicon-search"></i>
@@ -44,7 +44,7 @@
 														<h5><span class="glyphicon glyphicon-shopping-cart"></span> Shopping Cart</h5>
 													</div>
 													<div class="col-xs-6">
-														<button type="button" class="btn btn-primary btn-sm btn-block">
+														<button type="button" class="btn btn-primary btn-sm btn-block" data-dismiss="modal">
 															<span class="glyphicon glyphicon-share-alt"></span> Continue shopping
 														</button>
 													</div>
@@ -97,7 +97,7 @@
 	        			</div>
 	        		</div>
 			</div>
-		</nav> -->
+		</nav>
 		
 		<div class="contain">
 			<div class="container" >
@@ -138,6 +138,18 @@
 
 
 			<div class="flex-container" >
+				<div v-show="searchInput !== ''" class="card" style="width: 25rem;" v-for="catalog in shops" >
+			  		<a href="#"><img  class="card-img"  v-bind:src="catalog.image" alt="Card image cap"  height="250px" ></a>
+			  		<div class="card-body">
+			    		<!-- <h5 class="card-title">{{catalog.title}}</h5> -->
+			    		<p class="card-text">{{catalog.price}}</p>
+			    		<button class="btn btn-info pull"  v-on:click="addToCart(catalog)">
+			    		<i class="icon-shopping-cart"></i>	
+			    		Add to Cart</button>
+		  			</div>
+				</div>
+
+
 				<div class="card" style="width: 25rem;" v-for="catalog in shops" >
 			  		<a href="#"><img  class="card-img"  v-bind:src="catalog.image" alt="Card image cap"  height="250px" ></a>
 			  		<div class="card-body">
@@ -152,118 +164,123 @@
 		</div>	
 		
 	</div>	
-<script>
+	
+	<script>
 
-	var app = new Vue({
-		el:'#app',
-		data:{
-			shops:[],
-			items:[]
-		},
-		created() {
-			console.log("getttt")
-			this.getItem()
-			// this.getCart()
-		},
-		methods: {
-			addToCart(catalog) {
-				// console.log(this.items.length,"length items")
-				var count = 1;
-				if(this.items.length == 0) {
-					console.log("catalog length 0=",catalog.quantity)
-					catalog.quantity++	
-					this.items.push(catalog)	
-					
-				}else{
-					
+		var app = new Vue({
+			el:'#app',
+			data:{
+				shops:[],
+				items:[],
+				searchInput:''
+			},
+			created() {
+				console.log("getttt")
+				this.getItem()
+				this.getCart()
+			},
+			methods: {
+				search(searchInput) {
 
-					for(var i=0;i<this.items.length;i++) {
+				},
+				addToCart(catalog) {
+					// console.log(this.items.length,"length items")
+					var count = 1;
+					if(this.items.length == 0) {
+						console.log("catalog length 0=",catalog.quantity)
+						catalog.quantity++	
+						this.items.push(catalog)	
+						
+					}else{
+						
 
-						if(this.items[i].title == catalog.title){
-							console.log("book+1",this.items[i].quantity,"||",catalog.quantity)
-							console.log("caatalog before",catalog.quantity)
-							console.log("this.items before",this.items[i].quantity)
-							this.items[i].quantity++
-							catalog.quantity = this.items[i].quantity
-							console.log("catalog after",catalog.quantity)
-							console.log("this.item after",this.items[i].quantity)
-							console.log("book+1 after",this.items[i].quantity,"||",catalog.quantity)
-							count*=0
+						for(var i=0;i<this.items.length;i++) {
+
+							if(this.items[i].title == catalog.title){
+								console.log("book+1",this.items[i].quantity,"||",catalog.quantity)
+								console.log("caatalog before",catalog.quantity)
+								console.log("this.items before",this.items[i].quantity)
+								this.items[i].quantity++
+								catalog.quantity = this.items[i].quantity
+								console.log("catalog after",catalog.quantity)
+								console.log("this.item after",this.items[i].quantity)
+								console.log("book+1 after",this.items[i].quantity,"||",catalog.quantity)
+								count*=0
+							}	
+						}
+
+						if(count == 1){
+							console.log("catalog tidak ada=",catalog.quantity)
+							catalog.quantity++
+							this.items.push(catalog)
 						}	
 					}
+					
+					
+					axios.post('http://localhost:3000/carts/add',catalog)
+					.then(function(response) {
+						console.log(response)
+					})
+					.catch(err=>{
+						console.log(err)
+					})	
+					
+				},
+				getCart() {
+					let self =this
+					axios.get('http://localhost:3000/carts/show')
+					.then(dataCarts=>{
+						const {data} = dataCarts
+						self.items = data
+						console.log("getCart=",self.items) 
+					})
+					.catch(err=>{
+						console.log(err)
+					})	
 
-					if(count == 1){
-						console.log("catalog tidak ada=",catalog.quantity)
-						catalog.quantity++
-						this.items.push(catalog)
-					}	
+				},
+				removeToCart(item) {
+					item.quantity = item.quantity-1
+					if(item.quantity==0){
+						var cartRemove = this.items.filter(function(book) {
+							console.log(book.title,item.title)
+							return book.title !== item.title
+							
+						})
+						this.shops.forEach(catalog=>{
+							if(catalog.title == item.title) {
+								catalog.quantity = 0
+							}
+						})
+						this.items = cartRemove	
+					}						
+					
+
+					axios.post('http://localhost:3000/carts/remove',item)
+					.then(response=>{
+						console.log("=====",response)
+					})
+					.catch(err=>{
+						console.log(err.message)
+					})
+				},
+				getItem() {
+					let self =this
+					axios.get('http://localhost:3000/items/show')
+					.then(dataItems=>{
+						this.shops = dataItems.data
+						console.log("thshop",this.shops)
+					})
+					.catch(err=>{
+						console.log(err)
+					})
 				}
-				
-				
-				axios.post('http://localhost:3000/carts/add',catalog)
-				.then(function(response) {
-					console.log(response)
-				})
-				.catch(err=>{
-					console.log(err)
-				})	
-				
-			},
-			// getCart() {
-			// 	let self =this
-			// 	axios.get('http://localhost:3000/carts/show')
-			// 	.then(dataCarts=>{
-			// 		const {data} = dataCarts
-			// 		self.items = data
-			// 		console.log("getCart=",self.items) 
-			// 	})
-			// 	.catch(err=>{
-			// 		console.log(err)
-			// 	})	
-
-			// },
-			// removeToCart(item) {
-			// 	item.quantity = item.quantity-1
-			// 	if(item.quantity==0){
-			// 		var cartRemove = this.items.filter(function(book) {
-			// 			console.log(book.title,item.title)
-			// 			return book.title !== item.title
-						
-			// 		})
-			// 		this.shops.forEach(catalog=>{
-			// 			if(catalog.title == item.title) {
-			// 				catalog.quantity = 0
-			// 			}
-			// 		})
-			// 		this.items = cartRemove	
-			// 	}						
-				
-
-			// 	axios.post('http://localhost:3000/carts/remove',item)
-			// 	.then(response=>{
-			// 		console.log("=====",response)
-			// 	})
-			// 	.catch(err=>{
-			// 		console.log(err.message)
-			// 	})
-			// },
-			getItem() {
-				let self =this
-				axios.get('http://localhost:3000/items/show')
-				.then(dataItems=>{
-					this.shops = dataItems.data
-					console.log("thshop",this.shops)
-				})
-				.catch(err=>{
-					console.log(err)
-				})
 			}
-		}
 
-	})						
+		})						
 
 
-</script>
+	</script>
 	
 
 

@@ -8,15 +8,19 @@
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>	
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+	<script src="https://unpkg.com/sweetalert2@7.22.2/dist/sweetalert2.all.js"></script>	
+	<script src="https://cdn.jsdelivr.net/npm/vee-validate@latest/dist/vee-validate.js"></script>
+	<script>Vue.use(VeeValidate)</script>
 	<link rel="stylesheet" type="text/css" href="./css/index.css">
+	<script src="./components/searchBar.js"></script>
 
 </head>
 <body>
 	<div id="app" col-md-3 col-sm-4>
 		<nav class="navbar navbar-inverse">
 			<div class="container-fluid">
-				<a class="navbar-brand" href="#">Bookworm Store</a>
+				<a class="navbar-brand" href="index.html">Bookworm Store</a>
 				<form id="search-bar" class="navbar-form navbar-left" action="" >
 			    	<div class="input-group">
 			        	<input type="text" class="form-control" placeholder="Search" name="search">
@@ -29,63 +33,226 @@
 	    		</form>
 	    		<button class="btn btn-danger navbar-btn">Advance</button>
 			
-	    		<button type="button" class="btn btn-info btn-lg" id="cart" data-toggle="modal" data-target="#cartModal" v-on:click="getCart"><span class="glyphicon glyphicon-shopping-cart"></span></button>
-	       			
+	    		<button type="button" class="btn btn-info btn-lg" id="cart" data-toggle="modal" data-target="#cartModal" v-on:click=getCart()><span class="glyphicon glyphicon-shopping-cart"></span></button>
 	        		<div class="modal fade" id="cartModal" role="dialog">
-	        			<div class="modal-dialog">
-	        				<div class="modal-content">
-	        					<div class="modal-header">
-						          <h4 class="modal-title">Products</h4>
-						        </div>
-						        <div class="modal-body" >	
-						          <!-- <p>There are no products in your shopping cart</p> -->
-						        	<ul class="header-cart-wrapitem" v-for="item in items">
-										<li class="header-cart-item">
-											<div class="header-cart-item-img">
-												<img v-bind:src="item.image" alt="IMG">
+	        					
+	        			<div class="modal-dialog modal-lg">
+	        				<div class="panel panel-info">
+		        				<div class="modal-content">
+		        					<div class="modal-header">
+							          	<div class="panel-heading">
+											<div class="panel-title">
+												<div class="row">
+													<div class="col-xs-6">
+														<h5><span class="glyphicon glyphicon-shopping-cart"></span> Shopping Cart</h5>
+													</div>
+													<div class="col-xs-6">
+														<a href="index.html">
+															<button type="button" class="btn btn-primary btn-sm btn-block">
+																<span class="glyphicon glyphicon-share-alt"></span> Continue shopping
+															</button>
+														</a>	
+													</div>
+												</div>
 											</div>
-
-											<div class="header-cart-item-txt">
-												<span class="header-cart-item-name">
-													{{item.title}}
-												</span>
-
-												<span class="header-cart-item-info">
-													{{item.quantity}} x {{item.price}}
-												</span>
-												 <button v-on:click="removeToCart(item)"><i class="glyphicon glyphicon-trash"></i></button>
-											</div>
-										</li>
-									</ul>
-								</div>		
-						        <div class="modal-footer">
-								  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-								  <a href="checkout.html"><button type="button" class="btn btn-default" data-dismiss="modal">Buy Now</button></a>
-						        </div>
+										</div>
+							        </div>
+							         <div class="modal-body" >	
+							         
+							         	<div class="panel-body">
+											<div class = "product-list"  v-for="item in items">
+												<div class="row">
+													<div class="col-xs-2"><img class="img-responsive" v-bind:src="item.image" alt="IMG">
+													</div>
+													<div class="col-xs-3">
+														<h4 class="product-name"><strong>{{item.title}}</strong></h4><h4><small>Product description</small></h4>
+													</div>
+													<div class="col-xs-7">
+														<div class="col-xs-5">
+															<h6><strong>Rp. {{item.price.toLocaleString( {style:"currency"})}} </strong></h6>
+														</div>
+														<div class="col-xs-1">
+															<h6><strong>x</strong></h6>
+														</div>
+														<div class="col-xs-1" >
+															<h6><strong>{{item.quantity}}</strong></h6>
+														</div>
+														<div class="col-xs-1">
+															<h6><strong>=</strong></h6>
+														</div>
+														<div class="col-xs-2">
+															<h6><strong>Rp.{{(item.price *item.quantity).toLocaleString( {style:"currency" })}}</strong></h6>
+														</div>
+														<div class="col-xs-2">
+															<button v-on:click="removeToCart(item)"><i class="glyphicon glyphicon-trash"></i>
+															</button>
+														</div>
+													</div>
+												</div>
+												<hr>
+											</div>							
+										</div>
+									</div>		
+							        <div class="modal-footer">
+									  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+									  <a href="checkout.html"><button type="button" class="btn btn-default">Buy Now</button></a>
+							        </div>
+		        				</div>
 	        				</div>
 	        			</div>
 	        		</div>
 			</div>
 		</nav>
 
-		
+		<h3>Upload Form</h3>
+
+			<div v-if='alert' class="alert alert-danger">
+		    	<strong>Error!</strong> Please fill the required field and follow the requirement (image should be jpg or png).
+		  	</div>
+			
+			<div class="form-group">
+			<label for="title">Title:</label>
+			<input v-validate="'required|alpha'" name="title" type="title" class="form-control" id="title" v-model="title"><span style="color:red">{{ errors.first('title') }}</span>
+			</div>
+			<div class="form-group">
+			<label for="price">Price:</label>
+			<input v-validate="'required|numeric'" name="price" type="price" class="form-control" id="price" v-model="price"><span style="color:red">{{ errors.first('price') }}</span>
+			</div>
+			<div class="form-group">
+			<label for="image">Image:</label>
+			<input v-validate="'required|ext:jpg,png'" name="image" type="file" id="image" ref="file" v-on:change = "handleFileUpload()"><span style="color:red">{{ errors.first('image') }}</span>
+			</div>
+			<button type="submit" class="btn btn-default" v-on:click="dataSubmit()">Submit</button>
+
 
 	</div>
 	
-		
+	<script>
+
+		var app = new Vue({
+			el:'#app',
+			data:{
+				shops:[],
+				items:[],
+				title:"",
+				price:"",
+				file:"",
+				alert:false
+			},
+			created() {
+				console.log("getttt")
+				this.getItem()
+				this.getCart()
+			},
+			methods: {
+				getCart() {
+					let self =this
+					axios.get('http://localhost:3000/carts/show')
+					.then(dataCarts=>{
+						const {data} = dataCarts
+						self.items = data
+						var total = 0
+						data.forEach( function(book) {
+							total+=book.price*book.quantity
+						});
+						this.total = total.toLocaleString( {style:"currency" })
+					})
+					.catch(err=>{
+						console.log(err)
+					})	
+
+				},
+				removeToCart(item) {
+					item.quantity = item.quantity-1
+					if(item.quantity==0){
+						var cartRemove = this.items.filter(function(book) {
+							console.log(book.title,item.title)
+							return book.title !== item.title
+							
+						})
+						this.shops.forEach(catalog=>{
+							if(catalog.title == item.title) {
+								catalog.quantity = 0
+							}
+						})
+						this.items = cartRemove	
+					}						
+					
+
+					axios.post('http://localhost:3000/carts/remove',item)
+					.then(response=>{
+						console.log("=====",response)
+					})
+					.catch(err=>{
+						console.log(err.message)
+					})
+				},
+				getItem() {
+					let self =this
+					axios.get('http://localhost:3000/items/show')
+					.then(dataItems=>{
+						this.shops = dataItems.data
+						console.log("thshop",this.shops)
+					})
+					.catch(err=>{
+						console.log(err)
+					})
+				},
+				handleFileUpload() {
+					console.log("masuk handle")
+					this.file = this.$refs.file.files[0];
+				},
+				dataSubmit() {
+					console.log("mausku datasubnit")
+					this.$validator.validate().then(result => {
+				        if (!result) {
+				        	this.alert = true
+				         	console.log(result)
+				        }else{
+				        	let formData = new FormData()
+
+							formData.append("image",this.file)
+							formData.append("title",this.title)
+							formData.append("price",this.price)
+
+							axios.post(
+								'http://localhost:3000/items/upload',
+								formData,
+								{
+									headers: {
+										'Content-Type' : 'multipart/form-data'
+									}
+								}
+							)
+							.then(response=>{
+								swal({
+								  title: 'Data Submited',
+								  type: 'success'
+								})
+								this.title=""
+								this.price=""
+								this.file=""
+								console.log("upload success")
+							})
+							.catch(err=>{
+								swal({
+								  title: 'Failed to submit',
+								  type: 'error'
+								})
+								console.log("upload failed")
+							})
+				        }
+				      });
+
+					
+				}
+			}
+
+		})						
+	</script>
+			
 </body>
 </html>
 
 
-<script>
 
-	var app = new Vue({
-		el:'#app',
-		data: {
-			items:[],
-			total:"",
-			seen:true	
-		}
-	})
-
-</script>	
