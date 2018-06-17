@@ -10,7 +10,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>	
 	<link rel="stylesheet" type="text/css" href="./css/index.css">
-	<script src="./components/searchBar.js"></script>
+	<script src="./components/footer-component.js"></script>
 
 </head>
 <body>
@@ -100,10 +100,10 @@
 	        		</div>
 			</div>
 		</nav>
-
-		
+	
 		<div class="container" col-md-3 col-sm-4>
 			<div class="row" v-if="seen">
+				<h3>Checkout Page</h3>
 				<div class="col-xs-12">
 					<div class="panel panel-info">
 						<div class="panel-body">
@@ -163,7 +163,7 @@
 			</div>
 		</div>
 
-
+	<footer-component></footer-component>		
 	</div>
 	
 	<script>

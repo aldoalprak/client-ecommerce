@@ -13,7 +13,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/vee-validate@latest/dist/vee-validate.js"></script>
 	<script>Vue.use(VeeValidate)</script>
 	<link rel="stylesheet" type="text/css" href="./css/index.css">
-	<script src="./components/searchBar.js"></script>
+	<script src="./components/footer-component.js"></script>
 
 </head>
 <body>
@@ -112,7 +112,7 @@
 			
 			<div class="form-group">
 			<label for="title">Title:</label>
-			<input v-validate="'required|alpha'" name="title" type="title" class="form-control" id="title" v-model="title"><span style="color:red">{{ errors.first('title') }}</span>
+			<input  name="title" type="title" class="form-control" id="title" v-model="title"><span style="color:red">{{ errors.first('title') }}</span>
 			</div>
 			<div class="form-group">
 			<label for="price">Price:</label>
@@ -122,9 +122,9 @@
 			<label for="image">Image:</label>
 			<input v-validate="'required|ext:jpg,png'" name="image" type="file" id="image" ref="file" v-on:change = "handleFileUpload()"><span style="color:red">{{ errors.first('image') }}</span>
 			</div>
-			<button type="submit" class="btn btn-default" v-on:click="dataSubmit()">Submit</button>
+			<button id="submit-upload" type="submit" class="btn btn-danger " v-on:click="dataSubmit()">Submit</button>
 
-
+	<footer-component></footer-component>			
 	</div>
 	
 	<script>
