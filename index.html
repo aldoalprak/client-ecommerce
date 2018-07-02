@@ -27,9 +27,10 @@
 			        	</div>
 		      		</div>
 	    		</div>
-	    		<button class="btn btn-danger navbar-btn">Advance</button>
 			
-	    		<button type="button" class="btn btn-info btn-lg" id="cart" data-toggle="modal" data-target="#cartModal" v-on:click=getCart()><span class="glyphicon glyphicon-shopping-cart"></span></button>
+				<button type="button" class="btn btn-info btn-lg" id="cart" data-toggle="modal" data-target="#cartModal" v-on:click=getCart()><span class="glyphicon glyphicon-shopping-cart"></span></button>
+				<button type="button" class="btn btn-info btn-lg" id="upload" v-on:click=upload() v-if="adminStatus == true"><span class="glyphicon glyphicon-upload"></span></button>
+				<button type="button" class="btn btn-info btn-lg" id="logout" v-on:click=logout() v-if="adminStatus == true">logout</button>
 	        		<div class="modal fade" id="cartModal" role="dialog">
 	        					
 	        			<div class="modal-dialog modal-lg">
@@ -166,15 +167,27 @@
 			data:{
 				shops:[],
 				items:[],
-				searchInput:''
+				searchInput:'',
+				adminStatus:false
 			},
 			created() {
+				if(localStorage.hasOwnProperty("token")){
+					this.adminStatus = true
+				}else{
+					this.adminStatus = false
+				}
 				console.log("getttt")
 				this.getItem()
 				this.getCart()
 			},
 			methods: {
-				
+				upload() {
+					window.location = "upload.html"
+				},
+				logout(){
+					localStorage.clear()
+					window.location = "index.html"
+				},
 				handleSearch(){
 					for(let i=0;i<this.shops.length;i++) {
 						console.log("mask handlesearch")

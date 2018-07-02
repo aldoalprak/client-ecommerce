@@ -140,9 +140,14 @@
 				alert:false
 			},
 			created() {
-				console.log("getttt")
-				this.getItem()
-				this.getCart()
+				if(localStorage.hasOwnProperty("token")) {
+					console.log("getttt")
+					this.getItem()
+					this.getCart()
+				}else{
+					window.location = "index.html"
+				}
+				
 			},
 			methods: {
 				getCart() {
@@ -220,6 +225,7 @@
 								formData,
 								{
 									headers: {
+										'token': localStorage.getItem("token"),
 										'Content-Type' : 'multipart/form-data'
 									}
 								}
