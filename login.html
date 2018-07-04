@@ -76,7 +76,7 @@
         },
         created() {
             if(localStorage.hasOwnProperty("token")){
-                window.location = 'index.html'
+                window.location = "index.html"
             }
         },
         methods: {
@@ -85,7 +85,7 @@
                 
                 axios({
                     method:"post",
-                    url:"http://localhost:3000/users/signin",
+                    url:"https://api_ecommerce.alprak.net/users/signin",
                     data:{
                         email: this.email,
                         password: this.password
